@@ -12,10 +12,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Restore full source from archive parts
+      - name: Restore full source from archive chunks
         run: |
           set -e
-          cat ci/source_part_*.b64 | base64 -d > /tmp/src.tar.gz
+          cat ci/chunk_*.b64 | base64 -d > /tmp/src.tar.gz
           tar xzf /tmp/src.tar.gz -C .
           if [ -f keystore/ostadkar-release.keystore.b64 ]; then
             base64 -d keystore/ostadkar-release.keystore.b64 > keystore/ostadkar-release.keystore
