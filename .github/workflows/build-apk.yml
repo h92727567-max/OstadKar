@@ -1,4 +1,4 @@
-name: Build APK
+name: Build Signed Release APK
 
 on:
   workflow_dispatch:
@@ -26,21 +26,20 @@ jobs:
         with:
           gradle-version: "8.9"
 
-      - name: Grant execute permission for gradlew
+      - name: Decode keystore
         run: |
-          if [ -f ./gradlew ]; then chmod +x ./gradlew; fi
-
-      - name: Build Debug APK
-        run: |
-          if [ -f ./gradlew ]; then
-            ./gradlew assembleDebug --stacktrace
-          else
-            gradle assembleDebug --stacktrace
+          mkdir -p keystore
+          if [ -f keystore/ostadkar-release.keystore.b64 ]; then
+            base64 -d keystore/ostadkar-release.keystore.b64 > keystore/ostadkar-release.keystore
           fi
+          ls -la keystore/ || true
 
-      - name: Upload APK
+      - name: Build Signed Release APK
+        run: gradle assembleRelease --stacktrace
+
+      - name: Upload Signed APK
         uses: actions/upload-artifact@v4
         with:
-          name: OstadKar-debug-apk
-          path: app/build/outputs/apk/debug/*.apk
+          name: OstadKar-release-signed
+          path: app/build/outputs/apk/release/*.apk
           if-no-files-found: error
