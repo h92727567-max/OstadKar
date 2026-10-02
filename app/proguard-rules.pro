@@ -1,0 +1,2 @@
+-keep class com.ostadkar.app.data.local.entity.** { *; }
+-keep class com.ostadkar.app.data.local.dao.** { *; }
